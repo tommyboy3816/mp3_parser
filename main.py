@@ -1,9 +1,6 @@
 import os
 from glob import glob
-import time
-import logging
 import music_tag
-import string
 import csv
 
 
@@ -11,16 +8,16 @@ import csv
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 
-def find_mp3s(dir):
+def find_mp3s(mp3_dir):
     num_mp3s = 0
 
     out = csv.writer(open("d:\low_quality_mp3s.csv", "w", newline=''), delimiter="%", quoting=csv.QUOTE_NONE, escapechar='\\')
     out.writerow(["artist", "title", "album", "bitrate", "codec", "length", "sample rate"])
 
     # Use a breakpoint in the code line below to debug your script.
-    print(f'Looking for mp3s in {dir}')  # Press Ctrl+F8 to toggle the breakpoint.
+    print(f'Looking for mp3s in {mp3_dir}')  # Press Ctrl+F8 to toggle the breakpoint.
 
-    result = [y for x in os.walk(dir) for y in glob(os.path.join(x[0], '*.mp3'))]
+    result = [y for x in os.walk(mp3_dir) for y in glob(os.path.join(x[0], '*.mp3'))]
     num_mp3s = len(result)
 
     num_mp3s = 0
@@ -48,6 +45,6 @@ def find_mp3s(dir):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    num_mp3s = find_mp3s('M:\\')
-    print("Found {} mp3s".format(num_mp3s))
+    number_of_mp3s = find_mp3s('M:\\')
+    print("Found {} mp3s".format(number_of_mp3s))
 
