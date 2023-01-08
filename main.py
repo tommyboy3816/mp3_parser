@@ -12,7 +12,7 @@ def find_mp3s(mp3_dir):
     num_mp3s = 0
 
     out = csv.writer(open("d:\low_quality_mp3s.csv", "w", newline=''), delimiter="%", quoting=csv.QUOTE_NONE, escapechar='\\')
-    out.writerow(["artist", "title", "album", "bitrate", "codec", "length", "sample rate"])
+    out.writerow(["artist", "title", "album", "bitrate", "codec", "length", "sample rate", "location"])
 
     # Use a breakpoint in the code line below to debug your script.
     print(f'Looking for mp3s in {mp3_dir}')  # Press Ctrl+F8 to toggle the breakpoint.
@@ -36,8 +36,8 @@ def find_mp3s(mp3_dir):
             album = f['album']
             #print("   {}, {}, {}, {}, {}, {}".format(artist, title,bitrate/1000, codec, length, sr))
             if bitrate < 256:
-                print("%5d) %-*s %-*s %-*s %3d %-*s %5d" % (num_mp3s, 25, artist, 40, title, 20, album, bitrate, 6, codec, length))
-                info = [artist, title, album, bitrate, codec, length, sr]
+                print("%5d) %-*s %-*s %-*s %3d %-*s %5d, %-*s" % (num_mp3s, 25, artist, 40, title, 20, album, bitrate, 6, codec, length, 64, name))
+                info = [artist, title, album, bitrate, codec, length, sr, name]
                 # print(info)
                 out.writerow(info)
 
