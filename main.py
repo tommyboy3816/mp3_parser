@@ -3,6 +3,7 @@ from glob import glob
 import music_tag
 import csv
 import xlwt
+import time
 
 
 # Press Shift+F10 to execute it or replace it with your code.
@@ -76,8 +77,9 @@ def find_mp3s(mp3_dir):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    music_dir = 'M:\\'
-    # music_dir = 'C:\\Users\\Frank\\Music'
+    # music_dir = 'M:\\'
+    music_dir = 'E:\\Music'
+    start_time = time.time()
     number_of_mp3s = find_mp3s( music_dir )
-    print("Found {} mp3s at {}".format(number_of_mp3s, music_dir))
+    print("Found {} mp3s at {} in {:4.2f} seconds".format(number_of_mp3s, music_dir, (time.time() - start_time)))
 
