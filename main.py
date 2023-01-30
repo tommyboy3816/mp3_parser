@@ -72,8 +72,12 @@ def find_mp3s(mp3_dir, is_low_bitrate, is_various):
             length = int(f['#length'])
             sr = int(f['#samplerate'])
             # print("   {}, {}, {}, {}, {}, {}".format(artist, title,bitrate/1000, codec, length, sr))
-            if ((True == is_low_bitrate) and (bitrate < 256)) or \
-                    ((True == is_various) and ((album_artist == 'Various') or (album_artist == 'Various Artists'))):
+            if ((is_low_bitrate is True) and (bitrate < 256)) or \
+                    ((is_various is True) and (
+                            (album_artist == 'Various') or
+                            (album_artist == 'Various Artists') or
+                            (album_artist == 'Various artists') or
+                            (album_artist == ''))):
                 print("%5d) %-*s %-*s %-*s %-*s %3d %-*s %5d, %-*s" %
                       (num_mp3s, 25, artist, 40, title, 20, album, 25, album_artist, bitrate, 6, codec, length, 64, name))
                 # f['album_artist'] = artist
@@ -91,8 +95,9 @@ def find_mp3s(mp3_dir, is_low_bitrate, is_various):
 
     return num_mp3s
 
-# Press the green button in the gutter to run the script.
+
 if __name__ == '__main__':
+    number_of_mp3s = 0
     music_dir = 'M:\\'
     # music_dir = 'E:\\Music'
 
