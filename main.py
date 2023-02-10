@@ -11,13 +11,13 @@ import xlsxwriter
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 
-def find_mp3s(mp3_dir, is_low_bitrate, is_various):
+def find_mp3s(mp3_dir, is_low_bitrate, is_various, make_correction):
 
     if is_low_bitrate:
-        sheet = "low_qual_mp3s"
+        # sheet = "low_qual_mp3s"
         filename = "D:\\low_quality_mp3s"
     elif is_various:
-        sheet = "various_artists_mp3s"
+        # sheet = "various_artists_mp3s"
         filename = "D:\\various_artists_mp3s"
     else:
         print("INVALID CONFIG!!! is_low_bitrate {}, is_various {}".format(is_low_bitrate, is_various))
@@ -28,7 +28,7 @@ def find_mp3s(mp3_dir, is_low_bitrate, is_various):
 
     row = 0
     col = 0
-    column_headers = ["artist", "title", "album", "album_artitst", "bitrate", "codec", "length", "sample rate", "location"]
+    column_headers = ["artist", "title", "album", "album_artist", "bitrate", "codec", "length", "sample rate", "location"]
     column_widths = [32, 32, 32, 32, 7, 7, 7, 7, 48]
     column_align = [{'align': 'left'}, {'align': 'left'}, {'align': 'left'}, {'align': 'left'}, {'align': 'center'}, {'align': 'center'}, {'align': 'center'}, {'align': 'center'}, {'align': 'left'} ]
 
@@ -59,7 +59,7 @@ def find_mp3s(mp3_dir, is_low_bitrate, is_various):
 
     for name in result:
         if name.endswith(".mp3"):
-            num_mp3s+=1
+            num_mp3s += 1
             # print("{:5d}) {}".format(num_mp3s, name))
             f = music_tag.load_file(name)
 
@@ -71,17 +71,22 @@ def find_mp3s(mp3_dir, is_low_bitrate, is_various):
             codec = str(f['#codec'])
             length = int(f['#length'])
             sr = int(f['#samplerate'])
-            # print("   {}, {}, {}, {}, {}, {}".format(artist, title,bitrate/1000, codec, length, sr))
+            # print("   {}, {}, {}, {}, {}, {}, {}".format(artist, title, album_artist, bitrate/1000, codec, length, sr))
             if ((is_low_bitrate is True) and (bitrate < 256)) or \
-                    ((is_various is True) and (
-                            (album_artist == 'Various') or
-                            (album_artist == 'Various Artists') or
-                            (album_artist == 'Various artists') or
-                            (album_artist == ''))):
+                    ((is_various is True) and
+                     (
+                            (album_artist == 'Various')
+                            or (album_artist == 'various Artists')
+                            or (album_artist == 'Various Artists')
+                            or (album_artist == 'Various artists')
+                            # or (album_artist == '')
+                     )):
                 print("%5d) %-*s %-*s %-*s %-*s %3d %-*s %5d, %-*s" %
                       (num_mp3s, 25, artist, 40, title, 20, album, 25, album_artist, bitrate, 6, codec, length, 64, name))
-                # f['album_artist'] = artist
-                # f.save()
+                if make_correction:
+                    print("Making correction to artist {}".format(artist))
+                    f['album_artist'] = artist
+                    f.save()
                 info = [artist, title, album, album_artist, bitrate, codec, length, sr, name]
 
                 for item in info:
@@ -109,6 +114,7 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--directory')
     parser.add_argument('-v', '--various', action='store_true')
     parser.add_argument('-l', '--low_bitrate', action='store_true')
+    parser.add_argument('-c', '--correct', action='store_true')
     # parser.add_argument('-h', '--help')
     args = parser.parse_args()
     print(args.directory, args.various, args.low_bitrate)
@@ -119,6 +125,5 @@ if __name__ == '__main__':
         print("no directory defined, using {}".format(music_dir))
 
     start_time = time.time()
-    number_of_mp3s = find_mp3s( music_dir, args.low_bitrate, args.various )
+    number_of_mp3s = find_mp3s( music_dir, args.low_bitrate, args.various, args.correct )
     print("Found {} mp3s at {} in {:4.2f} seconds".format(number_of_mp3s, music_dir, (time.time() - start_time)))
-
